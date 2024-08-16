@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego Musical Makey Makey</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #game-container {
+            text-align: center;
+        }
+        #current-note {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        #next-note {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .note {
+            display: inline-block;
+            width: 120px;
+            height: 120px;
+            margin: 10px;
+            border-radius: 50%;
+            font-size: 18px;
+            line-height: 1.2;
+            cursor: pointer;
+            position: relative;
+        }
+        .note-name {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .note-key {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        #do { background-color: #FF0000; }
+        #re { background-color: #FFA500; }
+        #mi { background-color: #FFFF00; }
+        #sol { background-color: #008000; }
+        #la { background-color: #0000FF; }
+        #do-agudo { background-color: #800080; }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="current-note"></div>
+        <div id="next-note"></div>
+        <div>
+            <div class="note" id="do">
+                <div class="note-name">Do</div>
+                <div class="note-key">↑</div>
+            </div>
+            <div class="note" id="re">
+                <div class="note-name">Re</div>
+                <div class="note-key">↓</div>
+            </div>
+            <div class="note" id="mi">
+                <div class="note-name">Mi</div>
+                <div class="note-key">←</div>
+            </div>
+            <div class="note" id="sol">
+                <div class="note-name">Sol</div>
+                <div class="note-key">→</div>
+            </div>
+            <div class="note" id="la">
+                <div class="note-name">La</div>
+                <div class="note-key">Espacio</div>
+            </div>
+            <div class="note" id="do-agudo">
+                <div class="note-name">Do'</div>
+                <div class="note-key">Click</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const notes = ['do', 're', 'mi', 'sol', 'la', 'do-agudo'];
+        const keyMap = {
+            'ArrowUp': 'do',
+            'ArrowDown': 're',
+            'ArrowLeft': 'mi',
+            'ArrowRight': 'sol',
+            ' ': 'la',
+            'click': 'do-agudo'
+        };
+
+        let currentNote;
+        let nextNote;
+
+        function getRandomNote() {
+            return notes[Math.floor(Math.random() * notes.length)];
+        }
+
+        function updateDisplay() {
+            document.getElementById('current-note').textContent = currentNote.toUpperCase();
+            document.getElementById('current-note').style.color = getComputedStyle(document.getElementById(currentNote)).backgroundColor;
+            document.getElementById('next-note').textContent = `Siguiente: ${nextNote.toUpperCase()}`;
+        }
+
+        function startGame() {
+            currentNote = getRandomNote();
+            nextNote = getRandomNote();
+            updateDisplay();
+        }
+
+        function handleInput(input) {
+            if (keyMap[input] === currentNote) {
+                currentNote = nextNote;
+                nextNote = getRandomNote();
+                updateDisplay();
+            }
+        }
+
+        document.addEventListener('keydown', (event) => {
+            handleInput(event.key);
+        });
+
+        document.getElementById('do-agudo').addEventListener('click', () => {
+            handleInput('click');
+        });
+
+        startGame();
+    </script>
+</body>
+</html>
